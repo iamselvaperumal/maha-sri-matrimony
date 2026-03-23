@@ -71,12 +71,176 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", form);
-    alert("Registration details submitted successfully! Proceeding to the dashboard...");
-    navigate('/dashboard');
+// ── Paste these maps at the top of your RegisterPage.jsx (outside the component) ──
+
+const RASI_MAP = {
+  "Mesham (Aries)": "Mesha",
+  "Rishabam (Taurus)": "Rishabha",
+  "Mithunam (Gemini)": "Mithuna",
+  "Kadagam (Cancer)": "Karka",
+  "Simmam (Leo)": "Simha",
+  "Kanni (Virgo)": "Kanya",
+  "Thulaam (Libra)": "Tula",
+  "Viruchigam (Scorpio)": "Vrischika",
+  "Dhanusu (Sagittarius)": "Dhanus",
+  "Magaram (Capricorn)": "Makara",
+  "Kumbam (Aquarius)": "Kumbha",
+  "Meenam (Pisces)": "Meena",
+};
+
+const DASA_MAP = {
+  "Surya Dasa": "Sun",
+  "Chandra Dasa": "Moon",
+  "Kuja Dasa": "Mars",
+  "Rahu Dasa": "Rahu",
+  "Guru Dasa": "Jupiter",
+  "Sani Dasa": "Saturn",
+  "Budha Dasa": "Mercury",
+  "Ketu Dasa": "Ketu",
+  "Sukra Dasa": "Venus",
+};
+
+const PLANET_MAP = {
+  "லக்னம்/Lagnam": "Lagnam",
+  "சூரியன்/Sun": "Sun",
+  "சந்திரன்/Moon": "Moon",
+  "சுக்கிரன்/Venus": "Venus",
+  "சனி/Saturn": "Saturn",
+  "குரு/Jupiter": "Jupiter",
+  "ராகு/Raagu": "Rahu",
+  "செவ்வாய்/Mars": "Mars",
+  "புதன்/Mercury": "Mercury",
+  "கேது/Kethu": "Ketu",
+  "மாந்தி/Maanthi": "Maanthi",
+};
+
+// ── Replace your handleSubmit with this ──
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // ── helpers ──
+  const pad = (n) => String(n).padStart(2, "0");
+
+  const buildDob = () => {
+    const { dobDate, dobMonth, dobYear } = form;
+    if (!dobDate || !dobMonth || !dobYear) return null;
+    return `${dobYear}-${pad(dobMonth)}-${pad(dobDate)}`;
   };
+
+  const buildBirthTime = () => {
+    const dob = buildDob();
+    if (!dob) return null;
+    let h = parseInt(form.tobHour) || 0;
+    const m = parseInt(form.tobMin) || 0;
+    if (form.tobSession === "PM" && h !== 12) h += 12;
+    if (form.tobSession === "AM" && h === 12) h = 0;
+    return `${dob}T${pad(h)}:${pad(m)}:00`;
+  };
+
+  const buildSiblings = () => {
+    const siblings = [];
+    const numBro = parseInt(form.numberOfBrothers) || 0;
+    const marBro = parseInt(form.brothersMarried) || 0;
+    for (let i = 0; i < numBro; i++) {
+      siblings.push({ relation: "BROTHER", isMarried: i < marBro, gender: "MALE" });
+    }
+    const numSis = parseInt(form.numberOfSisters) || 0;
+    const marSis = parseInt(form.sistersMarried) || 0;
+    for (let i = 0; i < numSis; i++) {
+      siblings.push({ relation: "SISTER", isMarried: i < marSis, gender: "FEMALE" });
+    }
+    return siblings;
+  };
+
+  const buildChart = (chartArr) =>
+    chartArr.map((planet, i) => ({
+      houseNo: i + 1,
+      planet: PLANET_MAP[planet] || planet || "",
+    }));
+
+  // ── build final payload ──
+  const payload = {
+    username: form.name,
+    password: form.password,
+
+    userProfile: {
+      fullName: form.name,
+      dob: buildDob(),
+      birthTime: buildBirthTime(),
+      birthPlace: form.placeOfBirth,
+      contactNumber: form.contactNumber,
+      whatsappNumber: form.whatsappNumber,
+      address: form.address,
+    },
+
+    familyDetails: [
+      {
+        relationType: "FATHER",
+        name: form.fatherName,
+        occupation: form.fatherOccupation,
+        subCaste: form.fatherSubCaste,
+        gothram: form.fatherGothram,
+      },
+      {
+        relationType: "MOTHER",
+        name: form.motherName,
+        occupation: form.motherOccupation,
+        subCaste: form.motherSubCaste,
+        gothram: form.motherGothram,
+      },
+    ],
+
+    siblings: buildSiblings(),
+
+    educationDetails: [
+      {
+        degree: form.education,
+        fieldOfStudy: form.educationDetails,
+        institution: "",          // not collected in form — leave blank or add a field
+      },
+    ],
+
+    workDetails: {
+      companyName: form.professionDetails,
+      designation: form.profession,
+      salary:
+        form.incomeType === "Monthly"
+          ? (parseInt(form.incomeAmount) || 0) * 12
+          : parseInt(form.incomeAmount) || 0,
+      location: form.city || form.district,
+      workMode: "HYBRID",         // not collected — default value
+    },
+
+    astroDetails: {
+      rasi: RASI_MAP[form.rasi] || form.rasi,
+      nakshatra: form.nakshatra,
+      patham: form.patham,
+      lagnam: RASI_MAP[form.lagnam] || form.lagnam,
+      birthDasa: DASA_MAP[form.birthDasa] || form.birthDasa,
+      dasaBalYear: parseInt(form.dasaRemainingYear) || 0,
+      dasaBalMonth: parseInt(form.dasaRemainingMonth) || 0,
+      dasaBalDay: parseInt(form.dasaRemainingDay) || 0,
+    },
+
+    rasiChart: buildChart(form.rasiChart),
+    navamsamChart: buildChart(form.navamsamChart),
+
+    userPreferences: {
+      assetsDetails: form.assetsDetails,
+      expectations: form.expectations,
+      pavunDetails: form.pavunDetails,
+    },
+  };
+
+  console.log("Payload:", JSON.stringify(payload, null, 2));
+
+  // TODO: replace with your API call, e.g.:
+  // await axios.post('/api/register', payload);
+
+  alert("Registration submitted successfully!");
+  navigate('/dashboard');
+};
 
   const renderAstroGrid = (chartType, title) => {
     // Indices mapping to form a hollow 4x4 grid (12 outer boxes)
