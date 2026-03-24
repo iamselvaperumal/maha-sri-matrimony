@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
-
+import authService from '../../services/api/authService';
 export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -12,9 +12,39 @@ export default function LoginPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log('Login:', { emailOrPhone, password, rememberMe });
-    navigate('/dashboard');
+
+    const payload = {
+      userName : emailOrPhone,
+      password : password,
+      rememberMe : rememberMe
+    }
+
+    handleLoginAPI(payload)
+
+    // authService.login( payload);
+    // console.log('Login:', { emailOrPhone, password, rememberMe });
+    // navigate('/dashboard');
   };
+
+  const handleLoginAPI = async (payload) => {
+  try {
+    const response = await authService.login(payload);
+
+    // assuming response contains token
+    const token = response.data.token;
+
+    // store token in localStorage
+    localStorage.setItem("token", token);
+
+    console.log("Login success:", response.data);
+
+    // navigate AFTER storing token
+    navigate("/dashboard");
+
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+};
 
   const handleOtpLogin = () => {
     console.log('OTP login');

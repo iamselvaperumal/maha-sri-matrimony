@@ -4,11 +4,20 @@ const authService = {
   // Login method
   login: async (credentials) => {
     try {
-      const response = await axios.post('/auth/login', credentials);
+      const response = await axios.post('/public/login', credentials);
       // Typical structure includes a token
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-      }
+      // if (response.data.token) {
+      //   localStorage.setItem('token', response.data.token);
+      // }
+      return response.data;
+    } catch (error) {
+      throw error.response ? error.response.data : error;
+    }
+  },
+
+    register: async (registrationDTO) => {
+    try {
+      const response = await axios.post('/public/register', registrationDTO);
       return response.data;
     } catch (error) {
       throw error.response ? error.response.data : error;
