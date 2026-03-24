@@ -2,25 +2,248 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-// Community Specific Options
-const COMMUNITIES = ['Kannada Devangar', 'Telugu Devangar', 'Devangar', 'Other'];
-const SUB_CASTES = ['Kannada Devangar', 'Telugu Devangar', 'Other'];
-const MOTHER_TONGUES = ['Kannadam', 'Telugu', 'Tamil', 'Malayalam', 'Hindi', 'Other'];
-const MARITAL_STATUS = ['Unmarried', 'Widow', 'Widower', 'Divorced', 'Separated'];
-const PHYSICAL_STATUS = ['Normal', 'Physically Challenged'];
+
+// basic information 
+
+const MARITAL_STATUS = ['Unmarried', 'Widowed', 'Divorced', 'Awaiting Divorce'];
 const GENDERS = ['Male', 'Female'];
 const REGISTERED_BY = ['Self', 'Parents', 'Sibling', 'Relative', 'Friend'];
 
-const RASI_OPTIONS = [
-  'Mesham (Aries)', 'Rishabam (Taurus)', 'Mithunam (Gemini)', 'Kadagam (Cancer)',
-  'Simmam (Leo)', 'Kanni (Virgo)', 'Thulaam (Libra)', 'Viruchigam (Scorpio)',
-  'Dhanusu (Sagittarius)', 'Magaram (Capricorn)', 'Kumbam (Aquarius)', 'Meenam (Pisces)'
+//personal details
+const PHYSICAL_STATUS = ['Normal', 'Physically Challenged'];
+const HIGHT = [
+  "4ft 6in / 137 cms",
+  "4ft 7in / 140 cms",
+  "4ft 8in / 142 cms",
+  "4ft 9in / 145 cms",
+  "4ft 10in / 147 cms",
+  "4ft 11in / 150 cms",
+  "5ft 0in / 152 cms",
+  "5ft 1in / 155 cms",
+  "5ft 2in / 157 cms",
+  "5ft 3in / 160 cms",
+  "5ft 4in / 163 cms",
+  "5ft 5in / 165 cms",
+  "5ft 6in / 168 cms",
+  "5ft 7in / 170 cms",
+  "5ft 8in / 173 cms",
+  "5ft 9in / 175 cms",
+  "5ft 10in / 178 cms",
+  "5ft 11in / 180 cms",
+  "6ft 0in / 183 cms",
+  "6ft 1in / 185 cms",
+  "6ft 2in / 188 cms",
+  "6ft 3in / 191 cms",
+  "6ft 4in / 193 cms",
+  "6ft 5in / 196 cms",
+  "6ft 6in / 198 cms",
+  "6ft 7in / 201 cms",
+  "6ft 8in / 203 cms",
+  "6ft 9in / 206 cms",
+  "6ft 10in / 208 cms",
+  "6ft 11in / 211 cms",
+  "7ft 0in / 213 cms",
+  "7ft 1in / 216 cms",
+  "7ft 2in / 218 cms"
+]
+const WEIGHT = [];
+for (let i = 35; i <= 150; i++) {
+  WEIGHT.push(`${i}kg`);
+}
+const COLOR = ["Dark Brown", "Brown", "Wheatish Brown", "Wheatish", "Fair", "Very Fair"];
+
+// Community Specific Options
+const COMMUNITIES = ['Kannada Devangar'];
+const SUB_CASTES = ["Ladhikaru",
+    "Mingilar",
+    "Sidhlukolar",
+    "Malaler",
+    "Irumaner",
+    "Thubbelar",
+    "Paneiyar",
+    "Annelar",
+    "Sevelar",
+    "Banilar",
+    "Pojjelar",
+    "Balithar",
+    "Cinnakotlar",
+    "UnisemaraPalithar",
+    "Enthelar",
+    "Muchaladhar",
+    "Kappelar",
+    "Kanjalakoontathar",
+    "Ambugulnar",
+    "Gudigelar",
+    "Bakthimaller",
+    "Maralelar",
+    "Pannethar",
+    "Allkulanelaru",
+    "Araganathar",
+    "Kallukotlar",
+    "Nagular",
+    "Kadubelar",
+    "Allikondar",
+    "Paleylar",
+    "Others"];
+const MOTHER_TONGUES = ['Kannadam', 'Telugu', 'Tamil', 'Other'];
+
+//education & career
+const EDUCATION = [
+  "Under 10th STD",
+  "10th Standard",
+  "12th Standard",
+  "Diploma",
+  "ITI",
+  "Undergraduate",
+  "Postgraduate",
+  "Doctorate",
+  "Other"
 ];
+const JOB = [
+  "Government",
+  "Private",
+  "Business",
+  "Self Employed",
+  "Not Working",
+  "Other"
+]
+const INCOME_TYPE = [
+  "Monthly",
+  "Yearly"
+]
+
+// Location 
+const COUNTRIES = [
+  "India",
+  "Other"
+]
+//list the all districts in tamilnadu
+const STATE = [
+  "Tamilnadu",
+  "others"
+]
+//list the all districts in tamilnadu
+const DISTRICT = [
+    "Ariyalur",
+    "Chengalpattu",
+    "Chennai",
+    "Coimbatore",
+    "Cuddalore",
+    "Dharmapuri",
+    "Dindigul",
+    "Erode",
+    "Kallakurichi",
+    "Kancheepuram",
+    "Kanniyakumari",
+    "Karur",
+    "Krishnagiri",
+    "Madurai",
+    "Mayiladuthurai",
+    "Nagapattinam",
+    "Namakkal",
+    "Nilgiris",
+    "Perambalur",
+    "Pudukkottai",
+    "Ramanathapuram",
+    "Ranipet",
+    "Salem",
+    "Sivaganga",
+    "Tenkasi",
+    "Thanjavur",
+    "Theni",
+    "Thoothukudi",
+    "Tiruchirappalli",
+    "Tirunelveli",
+    "Tirupathur",
+    "Tiruppur",
+    "Tiruvallur",
+    "Tiruvannamalai",
+    "Tiruvarur",
+    "Vellore",
+    "Viluppuram",
+    "Virudhunagar",
+    "Other"
+    ]
+
+    const DHOSAM = [
+   "No Dhosam",
+"Raagu Kethu Dhosam",
+"Sevvai Dhosam",
+"Raagu Kethu, Sevvai",
+"I don't know"
+    ]
+
+const RASI_OPTIONS = [
+    "மேஷம் (Mesham)",
+    "ரிஷபம் (Rishabam)",
+    "மிதுனம் (Mithunam)",
+    "கடகம் (Kadagam)",
+    "சிம்மம் (Simmam)",
+    "கன்னி (Kanni)",
+    "துலாம் (Thulaam)",
+    "விருச்சிகம் (Viruchigam)",
+    "தனுசு (Dhanusu)",
+    "மகரம் (Magaram)",
+    "கும்பம் (Kumbam)",
+    "மீனம் (Meenam)"
+]
 
 const PLANET_OPTIONS = [
-  'லக்னம்/Lagnam', 'சூரியன்/Sun', 'சந்திரன்/Moon', 'செவ்வாய்/Mars', 'ராகு/Raagu', 
-  'குரு/Jupiter', 'சனி/Saturn', 'புதன்/Mercury', 'கேது/Kethu', 'சுக்கிரன்/Venus', 'மாந்தி/Maanthi'
+    "மேஷம் (Mesham)",
+    "ரிஷபம் (Rishabam)",
+    "மிதுனம் (Mithunam)",
+    "கடகம் (Kadagam)",
+    "சிம்மம் (Simmam)",
+    "கன்னி (Kanni)",
+    "துலாம் (Thulaam)",
+    "விருச்சிகம் (Viruchigam)",
+    "தனுசு (Dhanusu)",
+    "மகரம் (Magaram)",
+    "கும்பம் (Kumbam)",
+    "மீனம் (Meenam)"
 ];
+
+const NAKSHATRA_OPTIONS = [
+    "அஸ்வினி (Ashwini)",
+    "பரணி (Bharani)",
+    "கிருத்திகை (Krittikai)",
+    "ரோகிணி (Rohini)",
+    "மிருகசீரிடம் (Mrigashiram)",
+    "திருவாதிரை (Thiruvathirai)",
+    "புனர்பூசம் (Punarvasu)",
+    "பூசம் (Poosam)",
+    "ஆயில்யம் (Aayilyam)",
+    "மகம் (Magam)",
+    "பூரம் (Pooradam)",
+    "உத்திரம் (Uthiram)",
+    "ஹஸ்தம் (Hastham)",
+    "சித்திரை (Chithirai)",
+    "சுவாதி (Swathi)",
+    "விசாகம் (Visagam)",
+    "அனுஷம் (Anusham)",
+    "கேட்டை (Kettai)",
+    "மூலம் (Moolam)",
+    "பூராடம் (Pooradam)",
+    "உத்திராடம் (Uthiradam)",
+    "திருவோணம் (Thiruvonam)",
+    "அவிட்டம் (Avittam)",
+    "சதயம் (Sathayam)",
+    "பூரட்டாதி (Poorattathi)",
+    "உத்திரட்டாதி (Uthirattathi)",
+    "ரேவதி (Revathi)"
+];
+
+const BIRTHDASA = [
+    "சூரியன் (Sun)",
+    "சந்திரன் (Moon)",
+    "செவ்வாய் (Mars)",
+    "புதன் (Mercury)",
+    "வியாழன்/குரு (Jupiter)",
+    "வெள்ளி/சுக்கிரன் (Venus)",
+    "சனி (Saturn)",
+    "ராகு (Rahu)",
+    "கேது (Kethu)"
+]
 
 export default function RegisterPage() {
   const [lang, setLang] = useState('en');
@@ -211,9 +434,7 @@ export default function RegisterPage() {
                 <span className="input-icon">#</span>
                 <select className="form-input form-select" value={form.height} onChange={e => handleChange('height', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="5ft">5 ft</option>
-                  <option value="5ft 5in">5 ft 5 in</option>
-                  <option value="6ft">6 ft</option>
+                   {HIGHT.map(h => <option key={h} value={h}>{h}</option>)}
                 </select>
               </div>
             </div>
@@ -223,9 +444,7 @@ export default function RegisterPage() {
                 <span className="input-icon">#</span>
                 <select className="form-input form-select" value={form.weight} onChange={e => handleChange('weight', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="50kg">50 kg</option>
-                  <option value="60kg">60 kg</option>
-                  <option value="70kg">70 kg</option>
+                   {WEIGHT.map(w => <option key={w} value={w}>{w}</option>)}
                 </select>
               </div>
             </div>
@@ -234,9 +453,7 @@ export default function RegisterPage() {
               <div className="input-wrapper select-wrapper">
                 <select className="form-input form-select" value={form.color} onChange={e => handleChange('color', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="Fair">Fair</option>
-                  <option value="Wheatish">Wheatish</option>
-                  <option value="Dark">Dark</option>
+                  {COLOR.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
             </div>
@@ -288,9 +505,7 @@ export default function RegisterPage() {
                 <span className="input-icon">🎓</span>
                 <select className="form-input form-select" value={form.education} onChange={e => handleChange('education', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="Bachelors">Bachelors</option>
-                  <option value="Masters">Masters</option>
-                  <option value="PhD">PhD</option>
+                   {EDUCATION.map(e => <option key={e} value={e}>{e}</option>)}
                 </select>
               </div>
             </div>
@@ -304,11 +519,9 @@ export default function RegisterPage() {
             <div className="form-group">
               <label className="form-label">Profession/Job <span className="required">*</span></label>
               <div className="input-wrapper select-wrapper">
-                <select className="form-input form-select" value={form. профессиya} onChange={e => handleChange('profession', e.target.value)} required>
+                <select className="form-input form-select" value={form.job} onChange={e => handleChange('job', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="IT">IT</option>
-                  <option value="Business">Business</option>
-                  <option value="Govt">Government</option>
+                   {JOB.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
             </div>
@@ -350,6 +563,8 @@ export default function RegisterPage() {
                 <span className="input-icon">🌍</span>
                 <select className="form-input form-select" value={form.country} onChange={e => handleChange('country', e.target.value)} required>
                   <option value="India">India</option>
+                  <option value="Other">Other</option>
+
                 </select>
               </div>
             </div>
@@ -359,7 +574,7 @@ export default function RegisterPage() {
                 <span className="input-icon">📍</span>
                 <select className="form-input form-select" value={form.state} onChange={e => handleChange('state', e.target.value)} required>
                   <option value="Tamilnadu">Tamilnadu</option>
-                  <option value="Karnataka">Karnataka</option>
+                  <option value="Karnataka">Others</option>
                 </select>
               </div>
             </div>
@@ -369,8 +584,7 @@ export default function RegisterPage() {
                 <span className="input-icon">📍</span>
                 <select className="form-input form-select" value={form.district} onChange={e => handleChange('district', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="Coimbatore">Coimbatore</option>
-                  <option value="Erode">Erode</option>
+                  {DISTRICT.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
             </div>
@@ -531,9 +745,7 @@ export default function RegisterPage() {
               <div className="input-wrapper select-wrapper">
                 <select className="form-input form-select" value={form.nakshatra} onChange={e => handleChange('nakshatra', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="Ashwini">Ashwini</option>
-                  <option value="Bharani">Bharani</option>
-                  <option value="Krittika">Krittika</option>
+                 {NAKSHATRA_OPTIONS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
             </div>
@@ -561,9 +773,7 @@ export default function RegisterPage() {
               <div className="input-wrapper select-wrapper">
                 <select className="form-input form-select" value={form.dhosam} onChange={e => handleChange('dhosam', e.target.value)} required>
                   <option value="">-- Select --</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Don't Know">Don't Know</option>
+                  {DHOSAM.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
             </div>
@@ -593,8 +803,7 @@ export default function RegisterPage() {
               <div className="input-wrapper select-wrapper">
                 <select className="form-input form-select" value={form.birthDasa} onChange={e => handleChange('birthDasa', e.target.value)}>
                   <option value="">-- Select --</option>
-                  <option value="Surya Dasa">Surya Dasa</option>
-                  <option value="Chandra Dasa">Chandra Dasa</option>
+                  {BIRTHDASA.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
             </div>
