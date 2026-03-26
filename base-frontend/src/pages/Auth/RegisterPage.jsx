@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
+import authService from '../../services/api/authService';
 
 
 // basic information 
@@ -457,13 +458,28 @@ const handleSubmit = (e) => {
   };
 
   console.log("Payload:", JSON.stringify(payload, null, 2));
+  
 
+  handleRegisterAPI(payload);
+  
   // TODO: replace with your API call, e.g.:
   // await axios.post('/api/register', payload);
 
-  alert("Registration submitted successfully!");
-  navigate('/dashboard');
+ 
 };
+
+
+const handleRegisterAPI = async (payload) => {
+  try {
+    const response = await authService.register(payload);
+
+    alert("Registration submitted successfully!",response);
+    navigate('/dashboard');
+
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+}
 
   const renderAstroGrid = (chartType, title) => {
     // Indices mapping to form a hollow 4x4 grid (12 outer boxes)
