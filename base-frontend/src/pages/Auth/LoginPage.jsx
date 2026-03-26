@@ -21,6 +21,7 @@ export default function LoginPage() {
   };
 
   return (
+    
     <div className="auth-wrapper">
       {/* Decorative background dots */}
       <div className="auth-bg-dots"></div>
