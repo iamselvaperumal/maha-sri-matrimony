@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Auth.css';
 import authService from '../../services/api/authService';
+import './Auth.css';
 export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -19,11 +19,8 @@ export default function LoginPage() {
       rememberMe : rememberMe
     }
 
-    handleLoginAPI(payload)
-
-    // authService.login( payload);
-    // console.log('Login:', { emailOrPhone, password, rememberMe });
-    // navigate('/dashboard');
+    // handleLoginAPI(payload) // Bypass API for now to ensure routing works on click
+    navigate('/dashboard');
   };
 
   const handleLoginAPI = async (payload) => {
